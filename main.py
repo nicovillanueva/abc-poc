@@ -6,7 +6,7 @@ import re
 def main():
 	atks = find_attackers()
 	print(atks)
-	a = atks[0]
+	a = attackers_menu(atks)
 	attacker = build_attacker(a.get('path'), a.get('attacker'), None)
 	print(attacker)
 	attacker.check()
@@ -21,6 +21,14 @@ def build_attacker(path, classname, arguments):
 	import importlib, os
 	m = importlib.import_module(path.replace(os.sep, '.').replace('.py', ''))
 	return getattr(m, classname)(arguments)
+
+
+def attackers_menu(kriegers):
+	print("We found the following available attacks:")
+	for i, k in enumerate(sorted(kriegers, key=lambda x: x.get('attacker'))):
+		print('- ({}) {} (In file: {})'.format(i, k.get('attacker'), k.get('path')))
+	sel = input("Select which one you want to use: ")
+	return sorted(kriegers, key=lambda x: x.get('attacker'))[int(sel)]
 
 
 def find_attackers(path='src/attacks', baseclass='BaseAttack'):
